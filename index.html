@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ff00ff">
+  <title>The Mind’s Canvas</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon-192x192.svg">
+  <script src="https://cdn.jsdelivr.net/npm/react@17/umd/react.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.20.6/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.156.0/build/three.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      background: #000;
+    }
+    #backgroundCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+    }
+    .sacred-geometry-bg {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="#ffffff" stroke-width="2" fill="none"/><path d="M50 10 L90 90 L10 90 Z" fill="none" stroke="#ffffff" stroke-width="2"/><circle cx="50" cy="50" r="20" stroke="#ffffff" stroke-width="2" fill="none"/></svg>');
+      background-repeat: repeat;
+      opacity: 0.2;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+    .glow-btn {
+      background: linear-gradient(45deg, #ff00ff, #00ffff);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      color: #000;
+      font-weight: bold;
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.7);
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    .glow-btn:hover {
+      transform: scale(1.05);
+    }
+    .min-h-screen { min-height: 100vh; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .p-4 { padding: 1rem; }
+    .relative { position: relative; }
+    .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+    .font-extrabold { font-weight: 800; }
+    .text-yellow-300 { color: #ffffff; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .text-center { text-align: center; }
+    .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-left: 1rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .font-bold { font-weight: 700; }
+    .text-cyan-300 { color: #67e8f9; }
+    .mt-6 { margin-top: 1.5rem; }
+    .inline-block { display: inline-block; }
+    .crawl-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      perspective: 400px;
+      overflow: hidden;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .crawl {
+      font-family: 'Arial', sans-serif;
+      font-size: 1.5rem;
+      color: #000;
+      text-align: justify;
+      max-width: 600px;
+      width: 80%;
+      position: absolute;
+      top: 50%;
+      transform: rotateX(20deg) translateY(0);
+      transform-origin: top;
+    }
+    .crawl::selection {
+      background: #fff;
+      color: #000;
+    }
+    .instruction {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fef08a;
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 11;
+    }
+    .hidden { display: none; }
+    #fallback { display: none; }
+  </style>
+</head>
+<body>
+  <canvas id="backgroundCanvas"></canvas>
+  <div id="crawl" class="crawl-container">
+    <div class="crawl" id="crawlText">
+      <h2 style="text-align: center; font-size: 2.5rem;">The Mind’s Canvas</h2>
+      <p>In the heart of a bustling city, where neon lights drowned the stars, lived Elias Vorne, an artist whose canvases captured the mundane with an unsettling precision. His paintings of crowded subways, rain-slicked streets, and weary faces were celebrated, yet Elias felt hollow. His work, though acclaimed, lacked the spark of something deeper—something that could unravel the mysteries of the human mind. At thirty-two, he stood at the edge of his creativity, staring into an abyss of repetition. That was until the night he met the Wanderer.</p>
+      <p>The Wanderer was no ordinary figure. Cloaked in tattered robes, with eyes that seemed to hold galaxies, they appeared at Elias’s gallery opening, uninvited. “You paint the surface,” they whispered, pressing a small vial of iridescent liquid into his hand. “This will show you the depths.” The vial pulsed with a strange warmth, and though every rational fiber in Elias screamed to discard it, curiosity—his oldest companion—won. That night, in his loft, he drank the psychedelic elixir, and the world as he knew it dissolved.</p>
+      <p>Elias’s journey began in a kaleidoscope of colors, where his studio morphed into a living forest of thought. Trees pulsed with the rhythm of his heartbeat, their leaves whispering memories he’d long buried: his mother’s laughter, the sting of a childhood rejection, the first time he held a brush. Each step forward unraveled a layer of his mind, revealing its architecture—vast, chaotic, and beautiful. He saw emotions as rivers, flowing and merging, sometimes flooding into torrents of rage or serenity. He encountered his fears, manifested as shadowy beasts that dissolved when he faced them with acceptance. The elixir didn’t just alter perception; it unlocked the mind’s hidden capabilities, allowing him to navigate his consciousness like a painter mixing colors on a palette.</p>
+      <p>As days bled into nights, Elias’s physical body lay still, but his mind soared. He met archetypes of his psyche: the Child, who taught him wonder; the Critic, who sharpened his discernment; and the Sage, who revealed that the mind was not a solitary island but a thread in a cosmic tapestry. He learned to manipulate his thoughts, reshaping memories to heal old wounds. He discovered he could amplify his creativity, conjuring visions so vivid they felt tangible. In one moment, he painted a galaxy with a single thought, stars bursting into existence at his will. In another, he relived a conversation with his estranged father, finding closure in a dialogue that never happened.</p>
+      <p>But the journey wasn’t without peril. The deeper Elias ventured, the more he risked losing himself. The elixir amplified not just his potential but his flaws. Doubt became a labyrinth, trapping him in cycles of self-destruction. Desire morphed into a siren’s call, tempting him to abandon reality for a dreamlike utopia. At the journey’s darkest point, he faced the Void—a representation of his fear of insignificance. It was here, in the silence of nothingness, that Elias found his greatest revelation: the mind’s power was not in its ability to create or destroy, but in its capacity to choose. He chose to return, to bring what he’d learned back to the world.</p>
+      <p>When Elias awoke, weeks had passed. His loft was a chaos of canvases, each one a masterpiece born from his journey. These weren’t mere paintings; they were windows into the human psyche, vibrant with colors that seemed to breathe. One depicted a spiral of joy and sorrow, another a city where every building was a facet of a single mind. His art now carried a truth that resonated with anyone who gazed upon it, as if the viewer’s own thoughts were reflected back. Galleries clamored for his work, but Elias had a greater purpose. He began teaching others to explore their minds, not with elixirs but through meditation, art, and introspection. He wrote of his journey, not as a manual, but as a story—a call to those who dared to look within.</p>
+      <p>The world beyond Elias’s loft began to change. His paintings inspired a movement, a renaissance of self-discovery. People spoke of “Vorne’s Vision,” a belief that the mind’s untapped potential could heal, create, and connect. Yet, whispers of the Wanderer persisted. Who were they? A hallucination? A guide from another realm? Elias never saw them again, but their gift had transformed him. He no longer painted to fill a void but to share the infinite.</p>
+      <p>[Continue the story in the full eBook!]</p>
+    </div>
+    <div class="instruction">Use Arrow Up/Down to scroll the text</div>
+  </div>
+  <div id="root"></div>
+  <div id="fallback" style={{ display: 'none' }}>
+    <div className="sacred-geometry-bg"></div>
+    <h1 className="text-4xl font-extrabold text-yellow-300 mb-6 text-center animate-pulse">The Mind’s Canvas</h1>
+    <p style={{ color: 'red', marginBottom: '20px' }}>Interactive app failed to load. Please try disabling browser extensions or using another browser.</p>
+    <p style={{ color: '#fef08a', maxWidth: '600px', margin: 'auto' }}>To read the first chapter, enable JavaScript or visit our website for the full eBook.</p>
+    <a href="https://example.com/buy-ebook" className="glow-btn mt-6 inline-block text-center">Buy Full eBook</a>
+  </div>
+  <script type="text/javascript">
+    // Three.js background with shader
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('backgroundCanvas'), alpha: true });
+
+    function resizeRenderer() {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      material.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
+    }
+    window.addEventListener('resize', resizeRenderer);
+
+    const vertexShader = `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+    const fragmentShader = `
+      varying vec2 vUv;
+      uniform vec2 iResolution;
+      uniform float iTime;
+      uniform vec3 color;
+
+      void main() {
+        vec2 v = iResolution.xy;
+        vec2 u = .2 * (vUv * iResolution.xy * 2.0 - iResolution.xy) / iResolution.y;
+
+        vec4 z = vec4(1.0, 2.0, 3.0, 0.0);
+        vec4 o = z;
+
+        for (float a = .5, t = iTime * 0.005, i = 0.0; i < 19.0; i++) {
+          o += (1.0 + cos(z + t)) / 
+               length((1.0 + i * dot(v, v)) * 
+                      sin(1.5 * u / (0.5 - dot(u, u)) - 9.0 * vec2(u.y, u.x) + t));
+          v = cos(t - 7.0 * u * pow(a, i)) - 5.0 * u;
+          t += 1.0;
+          a += 0.03;
+          u += tanh(40.0 * dot(u *= mat2(cos(i + 0.02 * t - vec4(0.0, 11.0, 33.0, 0.0))), u) * 
+                       cos(100.0 * vec2(u.y, u.x) + t)) / 200.0 + 
+               0.2 * a * u + 
+               cos(4.0 / exp(dot(o, o) / 100.0) + t) / 300.0;
+        }
+
+        o = 25.6 / (min(o, 13.0) + 164.0 / o) - dot(u, u) / 250.0;
+        gl_FragColor = vec4(o.rgb * color, 1.0);
+      }
+    `;
+
+    const colors = [
+      new THREE.Vector3(1, 0, 1), // Magenta
+      new THREE.Vector3(0, 1, 1), // Cyan
+      new THREE.Vector3(0.996, 0.941, 0.537) // Yellow
+    ];
+
+    const material = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+        iTime: { value: 0 },
+        color: { value: colors[0] }
+      }
+    });
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    function animateBackground() {
+      material.uniforms.iTime.value += 0.016;
+      const t = (Date.now() % 30000) / 10000; // 10 seconds per color
+      const index = Math.floor(t);
+      const nextIndex = (index + 1) % colors.length;
+      const frac = t - index;
+      const color = colors[index].clone().lerp(colors[nextIndex], frac);
+      material.uniforms.color.value = color;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animateBackground);
+    }
+    resizeRenderer();
+    animateBackground();
+  </script>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [showCrawl, setShowCrawl] = useState(true);
+      const [scrollPosition, setScrollPosition] = useState(0);
+
+      useEffect(() => {
+        const crawlText = document.getElementById('crawlText');
+        let animationFrame;
+
+        const scrollText = () => {
+          if (!showCrawl) return;
+          crawlText.style.transform = `rotateX(20deg) translateY(-${scrollPosition}px)`;
+          if (scrollPosition > 3000) { // 3000px for ~3000 words
+            setShowCrawl(false);
+            document.getElementById('crawl').style.display = 'none';
+          }
+          animationFrame = requestAnimationFrame(scrollText);
+        };
+        scrollText();
+
+        const handleKey = (e) => {
+          if (e.key === 'ArrowUp') {
+            setScrollPosition(prev => Math.max(prev - 10, 0));
+          } else if (e.key === 'ArrowDown') {
+            setScrollPosition(prev => prev + 10);
+          }
+        };
+        window.addEventListener('keydown', handleKey);
+
+        return () => {
+          cancelAnimationFrame(animationFrame);
+          window.removeEventListener('keydown', handleKey);
+        };
+      }, [showCrawl, scrollPosition]);
+
+      return (
+        <div className={`min-h-screen flex flex-col items-center justify-center p-4 relative ${showCrawl ? 'hidden' : ''}`}>
+          <div className="sacred-geometry-bg"></div>
+          <h1 className="text-4xl font-extrabold text-yellow-300 mb-6 text-center animate-pulse">
+            Continue the Cosmic Journey
+          </h1>
+          <p className="text-2xl text-cyan-300 mb-6 text-center" style={{ maxWidth: '600px' }}>
+            The Mind’s Canvas is not just a story—it’s an invitation to explore the uncharted territories of your own consciousness. Through Elias Vorne’s psychedelic odyssey, you’ll be hooked by a narrative that blends vivid imagery, psychological depth, and a touch of the mystical. This novel will captivate readers who crave adventure, not in distant lands, but in the most intimate frontier: the human mind. Perfect for fans of Dune’s philosophical depth or The Alchemist’s spiritual quest, this book offers a gripping hook—an artist’s transformation through a psychedelic lens—and a promise of revelation. Will you dare to follow Elias into the depths and discover what your mind is capable of? Grab The Mind’s Canvas and find out.
+          </p>
+          <a href="https://example.com/buy-ebook" className="glow-btn inline-block text-center">
+            Buy Full eBook
+          </a>
+        </div>
+      );
+    };
+
+    const rootElement = document.getElementById('root');
+    const fallbackElement = document.getElementById('fallback');
+    try {
+      ReactDOM.render(<App />, rootElement);
+    } catch (error) {
+      console.error('Rendering failed:', error);
+      rootElement.style.display = 'none';
+      fallbackElement.style.display = 'block';
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(error => console.error('Service Worker registration failed:', error));
+    }
+  </script>
+</body>
+</html>

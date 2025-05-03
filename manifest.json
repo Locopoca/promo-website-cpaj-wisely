@@ -1,0 +1,21 @@
+{
+    "name": "eBook Reader PWA",
+    "short_name": "eBook Reader",
+    "description": "A psychedelic eBook reader for the first chapter",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ff00ff",
+    "theme_color": "#ff00ff",
+    "icons": [
+      {
+        "src": "/icon-192x192.svg",
+        "sizes": "192x192",
+        "type": "image/svg+xml"
+      },
+      {
+        "src": "/icon-512x512.svg",
+        "sizes": "512x512",
+        "type": "image/svg+xml"
+      }
+    ]
+  }
